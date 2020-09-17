@@ -13343,7 +13343,7 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>Downloading: &#34;https://download.pytorch.org/models/vgg16-397923af.pth&#34; to /root/.torch/models/vgg16-397923af.pth
-100%|██████████| 553433881/553433881 [00:05&lt;00:00, 93698453.81it/s]
+100%|██████████| 553433881/553433881 [00:05&lt;00:00, 101349031.49it/s]
 </pre>
 </div>
 </div>
@@ -13465,14 +13465,16 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Build and train your network</span>
 <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">load_classifier</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-
+<span class="k">def</span> <span class="nf">load_classifier</span><span class="p">():</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
         <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -13488,9 +13490,6 @@ GPU Workspaces about Keeping Your Session Active. You'll want to include code fr
                                <span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
                               <span class="p">]))</span>
     <span class="n">model</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span>
-
-    <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">NLLLoss</span><span class="p">()</span>
-    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span><span class="n">lr</span> <span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     
@@ -13692,7 +13691,7 @@ Epoch - 20,  Training loss: 1.0195502
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_loss</span> <span class="o">=</span> <span class="mi">0</span>
@@ -13729,8 +13728,8 @@ Epoch - 20,  Training loss: 1.0195502
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Test Loss - 0.064
-Test Accuracy - 0.860
+<pre>Test Loss - 0.040
+Test Accuracy - 0.861
 </pre>
 </div>
 </div>
@@ -13825,16 +13824,14 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Write a function that loads a checkpoint and rebuilds the model</span>
 <span class="k">def</span> <span class="nf">load_checkpoint</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
-        <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">load_classifier</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_classifier</span><span class="p">()</span>
     <span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;class_to_idx&#39;</span><span class="p">]</span>
     <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">model</span>
@@ -13847,7 +13844,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filepath</span> <span class="o">=</span> <span class="s1">&#39;checkpoint.pth&#39;</span>
@@ -13861,7 +13858,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">loaded_model</span>
@@ -13921,7 +13918,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">process_image</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
@@ -13949,7 +13946,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img</span> <span class="o">=</span> <span class="n">process_image</span><span class="p">(</span><span class="s1">&#39;flowers/test/7/image_07211.jpg&#39;</span><span class="p">)</span>
@@ -13989,7 +13986,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -14037,7 +14034,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
@@ -14060,9 +14057,8 @@ Test Accuracy - 0.860
     
     <span class="n">idx_to_class</span> <span class="o">=</span> <span class="p">{</span> <span class="n">value</span> <span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="n">top_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">idx_to_class</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">top_labels</span><span class="p">]</span>
-    <span class="n">top_flowers</span>  <span class="o">=</span> <span class="p">[</span><span class="n">cat_to_name</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">top_labels</span><span class="p">]</span>
-    
-    <span class="k">return</span> <span class="n">top_probs</span><span class="p">,</span> <span class="n">top_labels</span> <span class="p">,</span> <span class="n">top_flowers</span>
+   
+    <span class="k">return</span> <span class="n">top_probs</span><span class="p">,</span> <span class="n">top_labels</span> 
 </pre></div>
 
     </div>
@@ -14082,7 +14078,7 @@ Test Accuracy - 0.860
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Display an image along with the top 5 classes</span>
@@ -14098,10 +14094,11 @@ Test Accuracy - 0.860
 <span class="n">axs</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">cat_to_name</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">flower_category</span><span class="p">)])</span>
 <span class="n">axs</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="n">probs</span> <span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">flowers</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+<span class="n">probs</span> <span class="p">,</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+<span class="n">top_flowers</span>  <span class="o">=</span> <span class="p">[</span><span class="n">cat_to_name</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">probs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">flowers</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">probs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">top_flowers</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">]);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
